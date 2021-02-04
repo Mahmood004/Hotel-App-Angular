@@ -1,0 +1,31 @@
+<mat-toolbar color="primary">
+    <mat-list fxLayout fxLayoutAlign="flex-end">
+        <mat-list-item *ngIf="isAuth">
+            <li class="list-item"><a routerLink="/hotels">Hotels</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="isAuth">
+            <li class="list-item"><a routerLink="/categories">Categories</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="isAuth">
+            <li class="list-item"><a routerLink="/subCategories">Sub Categories</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="isAuth">
+            <li class="list-item"><a routerLink="/ads">Ads</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="isAuth">
+            <li class="list-item"><a (click)="onLogout()">Logout</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="!isAuth">
+            <li class="list-item"><a routerLink="/signup">Signup</a></li>
+        </mat-list-item>
+        <mat-list-item *ngIf="!isAuth">
+            <li class="list-item"><a routerLink="/signin">Signin</a></li>
+        </mat-list-item>
+    </mat-list>
+</mat-toolbar>
+
+
+
+
+
+

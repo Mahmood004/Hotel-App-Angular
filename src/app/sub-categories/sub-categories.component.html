@@ -1,0 +1,65 @@
+<div fxLayoutAlign="center center">
+  <mat-form-field fxFlex="500px">
+    <input matInput type="text" placeholder="Filter" (keyup)="applySubCategoryFilter($event.target.value)">
+  </mat-form-field>
+</div>
+
+<mat-table [dataSource]="dataSourceSubCategory" matSort>
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.id }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="category">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.categoryName }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.status }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="edit">
+    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onSubCategoryEdit(element)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onSubCategoryDelete(element)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  <mat-header-row *matHeaderRowDef="displayedSubCategoryColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedSubCategoryColumns;"></mat-row>
+</mat-table>
+
+<mat-paginator #paginatorSubCategory [pageSize]="10" [pageSizeOptions]="[1, 5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+<div>
+  <form fxLayout="column" fxLayoutAlign="center center" (ngSubmit)="onSubmitSubCategory(form)" #form="ngForm">
+    <mat-form-field>
+      <mat-select placeholder="Choose Category" [ngModel]="subCategory?.parentId" name="category">
+        <mat-option *ngFor="let category of allCategories" [value]="category.id">{{ category.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Sub Category Name</mat-label>
+      <input matInput type="text" [ngModel]="subCategory?.name" name="name">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Select Status" [ngModel]="subCategory?.status" name="status">
+        <mat-option value="enabled">Enabled</mat-option>
+        <mat-option value="disabled">Disabled</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button type="submit" color="primary">Add Sub Category</button>
+  </form>
+</div>

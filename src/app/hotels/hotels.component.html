@@ -1,0 +1,146 @@
+
+<div fxLayoutAlign="center center">
+  <mat-form-field fxFlex="400px">
+    <input matInput type="text" placeholder="Filter" (keyup)="applyFilter($event.target.value)">
+  </mat-form-field>
+</div>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.id }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.name }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="logo">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Logo</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <img src="{{ 'http://localhost:3000/assets/' + element.logo }}" width="200" height="150">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="address">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.address }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span *ngFor="let email of element.email">{{ email }}</span>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="phone">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Phone</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <span *ngFor="let phone of element.phone">{{ phone }}</span>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="latitude">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Latitude</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.latitude }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="longitude">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Longitude</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.longitude }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.status }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onEdit(element)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onDelete(element)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[1, 5, 10, 20]" showFirstLastButtons>
+
+</mat-paginator>
+
+<div>
+  <form fxLayout="column" fxLayoutAlign="center center" (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <mat-form-field>
+      <mat-label>Hotel Name</mat-label>
+      <input matInput type="text" placeholder="Hotel name" name="name" [ngModel]="hotel?.name">
+    </mat-form-field>
+    
+    <input type="file" #fileInput style="display: none;" (change)="onFileSelected()">
+
+    <div fxLayout="row" fxLayoutGap="35px">
+      <button type="button" mat-icon-button color="primary" (click)="fileInput.click()">
+      <mat-icon style="font-size: 55px;" >image</mat-icon>
+      </button>
+      <button type="button" mat-raised-button (click)="uploadFile()" color="primary">Upload</button>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Address</mat-label>
+      <input matInput type="text" placeholder="Adress" name="address" [ngModel]="hotel?.address">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #emailList>
+        <mat-chip *ngFor="let email of emails" [selectable]="selectable" [removable]="removable" (removed)="removeEmail(email)">
+          {{ email }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input 
+          placeholder="Email(Multiple)" 
+          [matChipInputFor]="emailList"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="addEmail($event)"
+        >
+      </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #phoneList>
+        <mat-chip *ngFor="let phone of phones" [selectable]="selectable" [removable]="removable" (removed)="removePhone(phone)">
+          {{ phone }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Phone(Multiple)"
+          [matChipInputFor]="phoneList"
+          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="addPhone($event)"
+        >
+      </mat-chip-list>
+      </mat-form-field>
+    <mat-form-field>
+      <mat-label>Longitude</mat-label>
+      <input matInput type="number" placeholder="Latitude" name="latitude" [ngModel]="hotel?.latitude">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Latitude</mat-label>
+      <input matInput type="number" placeholder="Longitude" name="longitude" [ngModel]="hotel?.longitude">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-select placeholder="Select Status" name="status" [ngModel]="hotel?.status">
+        <mat-option value="enabled">Enabled</mat-option>
+        <mat-option value="disabled">Disabled</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button *ngIf="!updateMode" type="submit" mat-raised-button color="primary">Add Hotel</button>
+    <button *ngIf="updateMode" type="submit" mat-raised-button color="warn">Update Hotel</button>
+  </form>
+</div>

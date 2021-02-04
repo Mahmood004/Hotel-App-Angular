@@ -1,0 +1,118 @@
+<div fxLayoutAlign="center center">
+  <mat-form-field fxFlex="500px">
+    <input matInput type="text" placeholder="Filter" (keyup)="applyFilter($event.target.value)">
+  </mat-form-field>
+</div>
+
+<mat-table [dataSource]="dataSource" matSort>
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.id }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="description">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Description</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.description }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="images">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Images</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <img *ngFor="let image of element.image" src="{{ 'http://localhost:3000/assets/' + image }}" width="200" height="150">
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="videos">
+    <mat-header-cell *matHeaderCellDef mat-sort-header [ngClass]="'video-column-width'">Videos</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <video *ngFor="let video of element.video" width="320" height="240" controls>
+        <source src="{{ 'http://localhost:3000/assets/' + video }}">
+      </video>
+    </mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="hotel">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Hotel</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.hotelName }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="category">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.categoryName }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="subCategory">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Sub Category</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.subCategoryName }}</mat-cell>
+  </ng-container>
+  <ng-container matColumnDef="type">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+    <mat-cell *matCellDef="let element">{{ element.type }}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="edit">
+    <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onEdit(element)">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+  
+  <ng-container matColumnDef="delete">
+    <mat-header-cell *matHeaderCellDef>Delete</mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-icon-button (click)="onDelete(element)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+</mat-table>
+
+<mat-paginator [pageSize]="10" [pageSizeOptions]="[1, 5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+<div>
+  <form fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="20px" (ngSubmit)="onSubmit(form)" #form="ngForm">
+
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea matInput name="description" placeholder="description" [ngModel]="ad?.description" cols="30" rows="5"></textarea>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Choose Hotel" [ngModel]="ad?.hotelId" name="hotelId">
+        <mat-option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Choose Category" (selectionChange)="filterSubCategories($event.value)" [ngModel]="ad?.categoryId" name="categoryId"> 
+        <mat-option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-select placeholder="Choose Sub Category" [ngModel]="ad?.subCategoryId" name="subCategoryId">
+          <mat-option *ngFor="let subCategory of subCategories" [value]="subCategory.id">{{ subCategory.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    <button type="button" mat-icon-button (click)="openUploadDialog()" color="primary">
+      <mat-icon style="font-size: 30px;">collections</mat-icon>
+    </button>
+
+    <button type="button" mat-icon-button (click)="openUploadDialog()" color="primary">
+      <mat-icon style="font-size: 30px;">video_library</mat-icon>
+    </button>
+
+    <mat-form-field>
+      <mat-select placeholder="Select Type" [ngModel]="ad?.type" name="type">
+        <mat-option value="published">Published</mat-option>
+        <mat-option value="draft">Draft</mat-option>
+        <mat-option value="active">Active</mat-option>
+        <mat-option value="inactive">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="primary">Create Ad</button>
+
+  </form>
+</div>
